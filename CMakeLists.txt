@@ -42,7 +42,7 @@ target_link_libraries(perceptron-object PRIVATE gsl)
 target_include_directories(perceptron-object PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/gsl/")
 
 
-target_compile_options(pd-perceptron PRIVATE 
+target_compile_options(perceptron-object PRIVATE 
                 "-O3" 
                 "-ffast-math" 
                 "-funroll-loops" 
