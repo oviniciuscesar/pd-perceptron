@@ -2,9 +2,9 @@
 cmake_minimum_required(VERSION 3.5)
 include(${CMAKE_CURRENT_SOURCE_DIR}/pd.build/pd.cmake)
 
-project(pd-perceptron)
+project(perceptron-object)
 
-set_pd_external_path(${CMAKE_CURRENT_SOURCE_DIR}/pd-perceptron)
+set_pd_external_path(${CMAKE_CURRENT_SOURCE_DIR}/perceptron-object)
 
 
 # Set compilation flags for ARM architecture
@@ -32,14 +32,14 @@ set_target_properties(gsl PROPERTIES POSITION_INDEPENDENT_CODE ON)
 #╰──────────────────────────────────────╯
 # Get all cpp files inside ${CMAKE_SOURCE_DIR}/Sources/ and add them to the project
 file(GLOB EXTERNAL_SOURCES "${CMAKE_SOURCE_DIR}/*.c")
-add_pd_external(pd-perceptron perceptron ${EXTERNAL_SOURCES})
+add_pd_external(perceptron-object perceptron ${EXTERNAL_SOURCES})
 
 
 
-target_link_libraries(pd-perceptron PRIVATE gsl)
+target_link_libraries(perceptron-object PRIVATE gsl)
 
 
-target_include_directories(pd-perceptron PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/gsl/")
+target_include_directories(perceptron-object PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/gsl/")
 
 
 target_compile_options(pd-perceptron PRIVATE 
