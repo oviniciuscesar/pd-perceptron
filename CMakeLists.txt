@@ -1,6 +1,6 @@
 # Define your standard CMake header (for example):
 cmake_minimum_required(VERSION 3.5)
-include(${CMAKE_CURRENT_SOURCE_DIR}/Resources/pd.build/pd.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/Resources/pd.cmake/pd.cmake)
 
 project(perceptron-object)
 
