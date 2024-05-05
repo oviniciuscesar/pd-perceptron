@@ -22,7 +22,8 @@ jobs:
           brew install --cask pd
       - name: Clone gsl
         run: 
-            git submodule add https://github.com/ampl/gsl   gsl
+          git init
+          git submodule add https://github.com/ampl/gsl   gsl
       - name: Build Object
         run: |
           cmake . -B build
@@ -56,8 +57,9 @@ jobs:
           choco install puredata --yes
       - if: runner.os == 'Windows'
       - name: Clone gsl
-        run: 
-            git submodule add https://github.com/ampl/gsl   gsl
+        run:
+          git init
+          git submodule add https://github.com/ampl/gsl   gsl
       - name: Build Object
         shell: msys2 {0}
         run: |
@@ -87,7 +89,8 @@ jobs:
           sudo apt-get install puredata -y
       - name: Clone gsl
         run: 
-            git submodule add https://github.com/ampl/gsl   gsl
+          git init
+          git submodule add https://github.com/ampl/gsl   gsl
       - name: Build Object
         run: |
           cmake . -B build
