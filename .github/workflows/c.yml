@@ -20,6 +20,9 @@ jobs:
       - name: Install PureData and Deps
         run: |
           brew install --cask pd
+      - name: Clone gsl
+        run: 
+            git submodule add https://github.com/ampl/gsl   gsl
       - name: Build Object
         run: |
           cmake . -B build
@@ -52,7 +55,10 @@ jobs:
         run: |
           choco install puredata --yes
       - if: runner.os == 'Windows'
-        name: Build Object
+      - name: Clone gsl
+        run: 
+            git submodule add https://github.com/ampl/gsl   gsl
+      - name: Build Object
         shell: msys2 {0}
         run: |
           cmake . -B build
@@ -79,6 +85,9 @@ jobs:
           sudo apt-get update
           sudo add-apt-repository ppa:pure-data/pure-data -y
           sudo apt-get install puredata -y
+      - name: Clone gsl
+        run: 
+            git submodule add https://github.com/ampl/gsl   gsl
       - name: Build Object
         run: |
           cmake . -B build
