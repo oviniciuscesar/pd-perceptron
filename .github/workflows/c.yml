@@ -8,6 +8,10 @@ on:
 jobs:
   macos-universal-build:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: ["x86", "x64"]
+        precision: ["single", "double"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,10 +27,14 @@ jobs:
       - name: Upload Object
         uses: actions/upload-artifact@v3
         with:
-          name: ${{env.LIBNAME}}-macos-${{matrix.arch}}-${{matrix.precision}}
+          name: perceptron-macos-${{ matrix.arch }}-${{ matrix.precision }}
           path: Binaries
   windows-build:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: ["x86", "x64"]
+        precision: ["single", "double"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -53,10 +61,14 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: perceptron
-          path: perceptron
+          name: perceptron-macos-${{ matrix.arch }}-${{ matrix.precision }}
+          path: Binaries
   linux-build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: ["x86", "x64"]
+        precision: ["single", "double"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -74,23 +86,5 @@ jobs:
       - name: Upload Object
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.LIBNAME }}-linux-${{matrix.arch}}-${{matrix.precision}}
+          name: perceptron-macos-${{ matrix.arch }}-${{ matrix.precision }}
           path: Binaries
-
-package-artifacts:
-    needs: [macos-universal-build, windows-build, linux-build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: '${{ env.LIBNAME }}-*'
-          path: artifacts
-          merge-multiple: true
-      - name: Clear tmp files
-        run: rm -f artifacts/*.pdb
-      - name: Upload artifacts zip
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{env.LIBNAME}}-ALL-binaries
-          path: artifacts
