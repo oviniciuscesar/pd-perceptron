@@ -1,4 +1,3 @@
-
 name: C/C++ CI
 on:
   push:
@@ -8,10 +7,6 @@ on:
 jobs:
   macos-universal-build:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        arch: ["x86", "x64"]
-        precision: ["single", "double"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,25 +15,17 @@ jobs:
       - name: Install PureData and Deps
         run: |
           brew install --cask pd
-      - name: Clone gsl
-        run: 
-          git init
-          git submodule add https://github.com/ampl/gsl   gsl
       - name: Build Object
         run: |
           cmake . -B build
-          cmake --build build -j $(sysctl -n hw.logicalcpu)
+          cmake --build build -j 4
       - name: Upload Object
         uses: actions/upload-artifact@v3
         with:
-          name: perceptron-macos-${{ matrix.arch }}-${{ matrix.precision }}
-          path: Binaries
+          name: perceptron
+          path: perceptron
   windows-build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        arch: ["x86", "x64"]
-        precision: ["single", "double"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,27 +43,19 @@ jobs:
         run: |
           choco install puredata --yes
       - if: runner.os == 'Windows'
-      - name: Clone gsl
-        run:
-          git init
-          git submodule add https://github.com/ampl/gsl   gsl
-      - name: Build Object
+        name: Build Object
         shell: msys2 {0}
         run: |
           cmake . -B build
-          cmake --build build -j $(sysctl -n hw.logicalcpu)
+          cmake --build build -j 4
           rm perceptron/*.a
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: perceptron-windows-${{ matrix.arch }}-${{ matrix.precision }}
-          path: Binaries
+          name: perceptron
+          path: perceptron
   linux-build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: ["x86", "x64"]
-        precision: ["single", "double"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -87,16 +66,12 @@ jobs:
           sudo apt-get update
           sudo add-apt-repository ppa:pure-data/pure-data -y
           sudo apt-get install puredata -y
-      - name: Clone gsl
-        run: 
-          git init
-          git submodule add https://github.com/ampl/gsl   gsl
       - name: Build Object
         run: |
           cmake . -B build
-          cmake --build build -j $(sysctl -n hw.logicalcpu)
+          cmake --build build -j 4
       - name: Upload Object
         uses: actions/upload-artifact@v3
         with:
-          name: perceptron-linux-${{ matrix.arch }}-${{ matrix.precision }}
-          path: Binaries
+          name: perceptron
+          path: perceptron
