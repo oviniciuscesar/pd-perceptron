@@ -23,8 +23,8 @@ jobs:
       - name: Upload Object
         uses: actions/upload-artifact@v3
         with:
-          name: perceptron
-          path: perceptron
+          name: ${{env.LIBNAME}}-macos-${{matrix.arch}}-${{matrix.precision}}
+          path: Binaries
   windows-build:
     runs-on: windows-latest
     steps:
@@ -74,5 +74,5 @@ jobs:
       - name: Upload Object
         uses: actions/upload-artifact@v3
         with:
-          name: perceptron
-          path: perceptron
+          name: ${{ env.LIBNAME }}-linux-${{matrix.arch}}-${{matrix.precision}}
+          path: Binaries
