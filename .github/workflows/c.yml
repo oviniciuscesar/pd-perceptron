@@ -117,12 +117,12 @@ jobs:
         run: |
           cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }}
           cmake --build build -- -j$(nproc)
-      - name: Build Object for aarch64
+      - name: Build Object
         if: matrix.arch == 'aarch64'
         run: |
-          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DRUN_RESULT:INTERNAL=0
+          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DCMAKE_SYSTEM_PROCESSOR=aarch64
           cmake --build build -- -j$(nproc)
-      - name: Build Object for arm
+      - name: Build Object
         if: matrix.arch == 'arm'
         run: |
           cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DCMAKE_SYSTEM_PROCESSOR=arm
