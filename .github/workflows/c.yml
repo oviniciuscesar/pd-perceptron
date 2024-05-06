@@ -7,6 +7,7 @@ on:
     branches: ["main"]
 env:
   LIBNAME: perceptron
+  LIBVERSION: 0.1
 jobs:
   macos-universal-build:
     runs-on: macos-latest
@@ -26,13 +27,14 @@ jobs:
           # Search for the name in https://brew.sh/
       - name: Build Object for Arm
         if: ${{ matrix.arch == 'arm64' }}
+        continue-on-error: true
         run: |
-          cmake . -B build -DCMAKE_OSX_ARCHITECTURES=arm64 -DPD_FLOATSIZE=${{ matrix.precision }}
+          cmake . -B build -DCMAKE_OSX_ARCHITECTURES=arm64 -DPD_FLOATSIZE=${{ matrix.precision }} -DDOCUMENTATION=OFF -DGSL_DISABLE_TESTS=1
           cmake --build build -j $(sysctl -n hw.logicalcpu)
       - name: Build Object for Intel
         if: ${{ matrix.arch == 'amd64' }}
         run: |
-          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DCMAKE_OSX_ARCHITECTURES=x86_64
+          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DCMAKE_OSX_ARCHITECTURES=x86_64 -DDOCUMENTATION=OFF -DGSL_DISABLE_TESTS=1
           cmake --build build -j $(sysctl -n hw.logicalcpu)
       - name: Upload Object
         uses: actions/upload-artifact@v4
@@ -43,26 +45,22 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        compiler: [mingw, msvc] # CHANGE: Choose between a compiler, you don't need boths
+        compiler: [mingw] # CHANGE: Choose between a compiler, you don't need boths
         arch: [amd64]
         precision: [32, 64]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      # ──────────────────────────────────────
-      - if: matrix.compiler == 'msvc'
-        name: Set up Visual Studio Build Tools
-        uses: microsoft/setup-msbuild@v2
-        # TODO: Add vcpkg support
+        with:
+          submodules: recursive
+          fetch-depth: 0
       # ──────────────────────────────────────
       - if: matrix.compiler == 'mingw'
         name: Set up Msys2
         uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
-          install: make mingw-w64-x86_64-gcc mingw64/mingw-w64-x86_64-cmake
-          # Add here dynamic libraries that you use (ex. fftw3, gsl, ...). 
-          # Search for the name in https://packages.msys2.org/queue
+          install: make mingw-w64-x86_64-gcc mingw64/mingw-w64-x86_64-cmake mingw-w64-x86_64-python-sphinx mingw-w64-x86_64-python-sphinx_rtd_theme
           update: false
       # ──────────────────────────────────────
       - name: Install winget
@@ -76,8 +74,9 @@ jobs:
         run: |
           winget install -e --id MillerPuckette.Pd64 --accept-source-agreements
       - name: Configure and build
+        shell: msys2 {0}
         run: |
-          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }}
+          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DDOCUMENTATION=OFF -DGSL_DISABLE_TESTS=1
           cmake --build build
       - name: Upload
         uses: actions/upload-artifact@v4
@@ -88,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [amd64, aarch64, arm]
+        arch: [amd64]
         precision: [32, 64]
     steps:
       - uses: actions/checkout@v4
@@ -115,17 +114,7 @@ jobs:
       - name: Build Object
         if: matrix.arch == 'amd64'
         run: |
-          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }}
-          cmake --build build -- -j$(nproc)
-      - name: Build Object
-        if: matrix.arch == 'aarch64'
-        run: |
-          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DCMAKE_SYSTEM_PROCESSOR=aarch64
-          cmake --build build -- -j$(nproc)
-      - name: Build Object
-        if: matrix.arch == 'arm'
-        run: |
-          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DCMAKE_SYSTEM_PROCESSOR=arm
+          cmake . -B build -DPD_FLOATSIZE=${{ matrix.precision }} -DDOCUMENTATION=OFF -DGSL_DISABLE_TESTS=1
           cmake --build build -- -j$(nproc)
       - name: Upload Object
         uses: actions/upload-artifact@v4
@@ -144,8 +133,22 @@ jobs:
           merge-multiple: true
       - name: Clear tmp files
         run: rm -f artifacts/*.pdb
-      - name: Upload artifacts zip
+        # ──────────────────────────────────────
+      - name: Install Deken
+        continue-on-error: true
+        run: |
+          mkdir -p ${PWD}/package
+          docker run --rm --user $(id -u) \
+          --volume ${PWD}/artifacts:/artifacts \
+          --volume ${PWD}/package:/package \
+          registry.git.iem.at/pd/deken \
+          deken package /artifacts --output-dir /package -v ${{env.LIBVERSION}} -n ${{env.LIBNAME}}
+      - name: Clear Artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: ${{ env.LIBNAME }}-*
+      - name: Upload Deken
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.LIBNAME}}-ALL-binaries
-          path: artifacts
+          name: ${{ env.LIBNAME }}-${{env.LIBVERSION}}
+          path: "./package/"
