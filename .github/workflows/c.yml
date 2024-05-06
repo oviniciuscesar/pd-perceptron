@@ -26,7 +26,7 @@ jobs:
           # Search for the name in https://brew.sh/
       - name: Install Gsl
         run: 
-         git submodule add https://github.com/ampl/gsl   gsl     
+         bew install gsl  
       - name: Build Object for Arm
         if: ${{ matrix.arch == 'arm64' }}
         run: |
