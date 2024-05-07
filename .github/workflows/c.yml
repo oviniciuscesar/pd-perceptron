@@ -25,6 +25,9 @@ jobs:
           brew install --cask pd
           # Add here dynamic libraries that you use (ex. fftw3, gsl, ...).
           # Search for the name in https://brew.sh/
+      - name: Install Gsl
+        run: 
+         brew install gsl  
       - name: Build Object for Arm
         if: ${{ matrix.arch == 'arm64' }}
         continue-on-error: true
