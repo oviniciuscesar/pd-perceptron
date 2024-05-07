@@ -26,12 +26,5 @@ endif()
 
 target_compile_options(perceptron-object PUBLIC
                 "-O3" 
-                "-ffast-math" 
-                "-funroll-loops" 
-                "-fomit-frame-pointer" 
-                "-mfpmath=sse" 
-                "-msse" 
-                "-msse2" 
-                "-msse3" 
                 "-DPD"
 )

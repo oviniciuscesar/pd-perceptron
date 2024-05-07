@@ -29,6 +29,9 @@ jobs:
         if: ${{ matrix.arch == 'arm64' }}
         continue-on-error: true
         run: |
+          cd Libraries/gsl/ampl/thirdparty/asl
+          git checkout 2f5d9de
+          cd ../../../../..
           cmake . -B build -DCMAKE_OSX_ARCHITECTURES=arm64 -DPD_FLOATSIZE=${{ matrix.precision }} -DDOCUMENTATION=OFF -DGSL_DISABLE_TESTS=1
           cmake --build build -j $(sysctl -n hw.logicalcpu)
       - name: Build Object for Intel
@@ -129,26 +132,33 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: '${{ env.LIBNAME }}-*'
-          path: artifacts
+          path: ${{ env.LIBNAME }}
           merge-multiple: true
       - name: Clear tmp files
-        run: rm -f artifacts/*.pdb
+        run: |
+          rm -f ${{ env.LIBNAME }}/*.pdb
+          rm -f ${{ env.LIBNAME }}/*.a
         # ──────────────────────────────────────
       - name: Install Deken
         continue-on-error: true
         run: |
           mkdir -p ${PWD}/package
           docker run --rm --user $(id -u) \
-          --volume ${PWD}/artifacts:/artifacts \
+          --volume ${PWD}/${{env.LIBNAME}}:/${{env.LIBNAME}} \
           --volume ${PWD}/package:/package \
           registry.git.iem.at/pd/deken \
-          deken package /artifacts --output-dir /package -v ${{env.LIBVERSION}} -n ${{env.LIBNAME}}
+          deken package /${{env.LIBNAME}} --output-dir /package -v ${{env.LIBVERSION}} -n ${{env.LIBNAME}}
       - name: Clear Artifacts
         uses: geekyeggo/delete-artifact@v5
         with:
           name: ${{ env.LIBNAME }}-*
-      - name: Upload Deken
+      - name: Upload Bin
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.LIBNAME }}-${{env.LIBVERSION}}
+          path: "./${{env.LIBNAME}}"
+      - name: Upload Deken
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.LIBNAME }}-${{env.LIBVERSION}}-deken
           path: "./package/"
