@@ -2,7 +2,9 @@
 
 
 
-The `perceptron` is an artificial neuron model, created by Frank Rosenblatt in 1958, capable of automatically “learning” which are the ideal values ​​of weights `𝑊` that, when weighting the inputs `𝑋`, transmit the signal (returning the value 1) or not (returning the value 0) depending on the nature of the input data (input signal). In the context of machine learning, such an algorithm is used to solve binary classification and linear regression
+The `perceptron` is an artificial neuron model, created by Frank Rosenblatt in 1958, capable of automatically “learning” which are the ideal values ​​of weights `𝑊` that, when weighting the inputs `𝑋`, transmit the signal (returning the value 1) or not (returning the value 0) depending on the nature of the input data (input signal). In the context of machine learning, such an algorithm is used to solve binary classification and linear regression.
+
+This implementation is the result of a study of the creative appropriation of machine learning algorithms in the context of live-electornics music composition. Therefore, it presents some functions that are not in the original algorithm created by Rosenblat.
 
 
 
