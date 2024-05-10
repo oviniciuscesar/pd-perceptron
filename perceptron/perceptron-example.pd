@@ -505,7 +505,7 @@
 #X connect 11 0 12 0;
 #X coords 0 -1 1 1 350 70 2 100 100;
 #X restore 26 580 pd classification;
-#N canvas 1124 357 837 509 README 0;
+#N canvas 1135 357 485 424 README 1;
 #X text 53 304 2 - setup the hiperparameters and train the perceptron, f 34;
 #X text 53 336 3 -load and play a classification audio file;
 #X text 53 355 4 - classification or linear regression;
