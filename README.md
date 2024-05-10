@@ -10,11 +10,11 @@ This implementation is the result of a study of the `creative appropriation` of 
 
 # Build
 > [!NOTE]
-To build `perceptron` on Linux, Mac and Windows (using Mingw64):
+`perceptron` uses `pd.build`. To build the external on Linux, Mac and Windows (using Mingw64):
 
 1. `git clone https://github.com/oviniciuscesar/pd-perceptron/ --recursive`;
 2. `cd pd-perceptron`;
-3. `git submodule add https://github.com/ampl/gsl   gsl`;
+3. `git submodule add https://github.com/ampl/gsl   Libraries/gsl`;
 4. `cmake . -B build`;
 5. `cmake --build build`;
 
