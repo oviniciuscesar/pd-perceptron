@@ -6,7 +6,8 @@ The `perceptron` is an artificial neuron model, created by Frank Rosenblatt in 1
 
 This implementation is the result of a study of the `creative appropriation` of `machine learning` algorithms in the context of `live-electornics` music `composition`. Therefore, it presents some functions that are not in the original algorithm created by Rosenblat.
 
-Binaries for macOS, Windows, and Linux are provided [here](https://github.com/oviniciuscesar/pd-perceptron/releases) 
+Binaries for macOS, Windows, and Linux are provided [here](https://github.com/oviniciuscesar/pd-perceptron/releases).
+
 If they are not working in some specific architecture or system, please contact me. 
 `perceptron` was tested on macOS (Sonoma 14.5), Windows 10 64 bits, and Ubuntu 22.04.2 LTS 64 bits running Pure Data Vanilla 0.54-1).
 
