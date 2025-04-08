@@ -16,7 +16,7 @@ If they are not working in some specific architecture or system, please contact 
 
 # Build
 > [!NOTE]
-`perceptron` uses `pd.build`. To build the external on Linux, Mac and Windows (using Mingw64):
+`perceptron` uses [pd.cmake](https://github.com/pure-data/pd.cmake). To build the external on Linux, Mac and Windows (using Mingw64):
 
 1. `git clone https://github.com/oviniciuscesar/pd-perceptron/ --recursive`;
 2. `cd pd-perceptron`;
